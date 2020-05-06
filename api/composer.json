@@ -16,13 +16,18 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.16"
+        "symfony/maker-bundle": "^1.16",
+        "symfony/phpunit-bridge": "^5.0",
+        "symfony/test-pack": "^1.0"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "github-oauth": {
+            "github.com": "1750aef70f3c095b71f10b0a14098987c7d72f71"
+        }
     },
     "autoload": {
         "psr-4": {
