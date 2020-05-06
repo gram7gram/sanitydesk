@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  www:
+    build: ./www/env
+    ports:
+      - 6000:80
+    networks:
+      - backend
+    volumes:
+      - './www:/var/www'
+
+  api:
+    build: ./api/env
+    ports:
+      - 6001:8000
+    networks:
+      - backend
+    volumes:
+      - './api:/var/www'
+
+  db:
+    image: mysql:5.6
+    environment:
+      - MYSQL_DATABASE=sanitydesk
+      - MYSQL_ROOT_PASSWORD=****
+    networks:
+      - backend
+    volumes:
+      - '.persistency/mysql/data:/var/lib/mysql'
+
+networks:
+  backend:
+    driver: "bridge"

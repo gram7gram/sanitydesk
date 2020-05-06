@@ -1,0 +1,11 @@
+.persistency
+.idea
+docker-compose.yml
+
+api/env/Dockerfile
+api/.env
+api/var/
+api/vendor/
+api/.web-server-pid
+api/composer.lock
+api/symfony.lock
