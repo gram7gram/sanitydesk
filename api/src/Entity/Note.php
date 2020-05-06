@@ -32,6 +32,15 @@ class Note
     private $createdAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=false)
+     *
+     * @Serializer\Groups("api_v1")
+     */
+    private $updatedAt;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=false)
@@ -52,6 +61,7 @@ class Note
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -62,6 +72,16 @@ class Note
     public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
+    }
+
+    public function setUpdatedAt(\DateTime $value): void
+    {
+        $this->updatedAt = $value;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
     }
 
     public function getText(): ?string

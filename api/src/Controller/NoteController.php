@@ -34,10 +34,9 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"GET"}, requirements={"id": "\d+"})
      */
-    public function getOne($id): JsonResponse
+    public function getOne($id, NoteService $service): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
-        $service = $this->get(NoteService::class);
 
         $entity = $em->getRepository(Note::class)->find($id);
         if (!$entity) {
@@ -52,10 +51,9 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function updateOne(Request $request, $id): JsonResponse
+    public function updateOne(Request $request, $id, NoteService $service): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
-        $service = $this->get(NoteService::class);
 
         $content = json_decode($request->getContent(), true);
 
@@ -74,10 +72,8 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes", methods={"POST"})
      */
-    public function createOne(Request $request): JsonResponse
+    public function createOne(Request $request, NoteService $service): JsonResponse
     {
-        $service = $this->get(NoteService::class);
-
         $content = json_decode($request->getContent(), true);
 
         $entity = $service->create($content);
@@ -90,10 +86,9 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"DELETE"}, requirements={"id": "\d+"})
      */
-    public function removeOne($id): JsonResponse
+    public function removeOne($id, NoteService $service): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
-        $service = $this->get(NoteService::class);
 
         $entity = $em->getRepository(Note::class)->find($id);
         if (!$entity) {

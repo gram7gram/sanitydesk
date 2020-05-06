@@ -28,6 +28,10 @@ class NoteService
 
         $em = $this->container->get('doctrine')->getManager();
 
+        $entity->setUpdatedAt(new \DateTime());
+        $entity->setText($content['text'] ?? '');
+        $entity->setTitle($content['title'] ?? '');
+
         $em->persist($entity);
         $em->flush();
 

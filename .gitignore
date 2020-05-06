@@ -9,3 +9,7 @@ api/vendor/
 api/.web-server-pid
 api/composer.lock
 api/symfony.lock
+
+www/node_modules
+www/package-lock.json
+www/env/Dockerfile

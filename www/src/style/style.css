@@ -1,0 +1,19 @@
+label.required:after {
+    content: " *";
+    color: red
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: 15px;
+    height: 15px;
+}
+
+.bg-darker {
+    background-color: #2a2f35 !important;
+}
+
+.note-input {
+    border: 0;
+    border-bottom: 1px solid #d0d0d0;
+}

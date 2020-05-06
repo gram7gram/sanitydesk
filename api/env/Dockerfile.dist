@@ -1,7 +1,10 @@
 FROM php:7.4-cli
 
-RUN docker-php-ext-install pcntl pdo pdo_mysql
+RUN apt update && apt install libzip-dev git -y --no-install-recommends
+    && docker-php-ext-install -j$(nproc) pcntl pdo pdo_mysql zip pcntl
 
 WORKDIR /var/www
 
 CMD php bin/console server:run 0.0.0.0:8000
+
+# CMD tail -f /dev/null
