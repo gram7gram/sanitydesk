@@ -14,6 +14,8 @@ const Card = ({ model }) => {
   const [ changes, setChanges ] = useState(false);
   const dispatch = useDispatch();
 
+  const isValid = model.title || model.text
+
   const change = name => e => {
     dispatch({
       type: CHANGED,
@@ -33,12 +35,13 @@ const Card = ({ model }) => {
     if (!changes) return
 
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(save, 500);
+    timeoutId = setTimeout(save, 1000);
 
   };
 
   const save = () => {
 
+    if (!isValid) return;
     if (loading) return;
 
     setLoading(true);

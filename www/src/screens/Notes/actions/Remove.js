@@ -2,13 +2,19 @@ import request from 'axios';
 import parameters from '../../../parameters';
 import { REMOVE_BEFORE, REMOVE_FAILURE, REMOVE_SUCCESS } from '../actions';
 
-export default (model, onComplete) => (dispatch) => {
+export default (model, onComplete) => (dispatch, getState) => {
+
+  const { accessToken } = getState().Login;
 
   dispatch({
     type: REMOVE_BEFORE
   });
 
-  request.delete(parameters.apiHost + `/v1/notes/${model.id}`)
+  request.delete(parameters.apiHost + `/v1/notes/${model.id}`, {
+    headers: {
+      Authorization: accessToken
+    }
+  })
     .then(() => {
 
       if (onComplete) onComplete();

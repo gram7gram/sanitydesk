@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Service\LoginService;
 use App\Service\NoteService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,11 +16,15 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes", methods={"GET"})
      */
-    public function getAll(NoteService $service): JsonResponse
+    public function getAll(LoginService $loginService, NoteService $service): JsonResponse
     {
+        $user = $loginService->denyAccessUnlessHasUser();
+
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository(Note::class)->findBy([], [
+        $entities = $em->getRepository(Note::class)->findBy([
+            'createdBy' => $user->getId()
+        ], [
             'createdAt' => 'DESC'
         ]);
 
@@ -34,11 +39,16 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"GET"}, requirements={"id": "\d+"})
      */
-    public function getOne($id, NoteService $service): JsonResponse
+    public function getOne(LoginService $loginService, $id, NoteService $service): JsonResponse
     {
+        $user = $loginService->denyAccessUnlessHasUser();
+
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository(Note::class)->find($id);
+        $entity = $em->getRepository(Note::class)->findOneBy([
+            'id' => $id,
+            'createdBy' => $user->getId()
+        ]);
         if (!$entity) {
             throw new NotFoundHttpException();
         }
@@ -51,13 +61,18 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function updateOne(Request $request, $id, NoteService $service): JsonResponse
+    public function updateOne(LoginService $loginService, Request $request, $id, NoteService $service): JsonResponse
     {
+        $user = $loginService->denyAccessUnlessHasUser();
+
         $em = $this->getDoctrine()->getManager();
 
         $content = json_decode($request->getContent(), true);
 
-        $entity = $em->getRepository(Note::class)->find($id);
+        $entity = $em->getRepository(Note::class)->findOneBy([
+            'id' => $id,
+            'createdBy' => $user->getId()
+        ]);
         if (!$entity) {
             throw new NotFoundHttpException();
         }
@@ -72,8 +87,10 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes", methods={"POST"})
      */
-    public function createOne(Request $request, NoteService $service): JsonResponse
+    public function createOne(LoginService $loginService, Request $request, NoteService $service): JsonResponse
     {
+        $user = $loginService->denyAccessUnlessHasUser();
+
         $content = json_decode($request->getContent(), true);
 
         $entity = $service->create($content);
@@ -86,11 +103,16 @@ class NoteController extends AbstractController
     /**
      * @Route("/v1/notes/{id}", methods={"DELETE"}, requirements={"id": "\d+"})
      */
-    public function removeOne($id, NoteService $service): JsonResponse
+    public function removeOne(LoginService $loginService, $id, NoteService $service): JsonResponse
     {
+        $user = $loginService->denyAccessUnlessHasUser();
+
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository(Note::class)->find($id);
+        $entity = $em->getRepository(Note::class)->findOneBy([
+            'id' => $id,
+            'createdBy' => $user->getId()
+        ]);
         if (!$entity) {
             throw new NotFoundHttpException();
         }

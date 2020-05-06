@@ -2,7 +2,9 @@ import request from 'axios';
 import parameters from '../../../parameters';
 import { SAVE_BEFORE, SAVE_FAILURE, SAVE_SUCCESS } from '../actions';
 
-export default (model, onComplete) => (dispatch) => {
+export default (model, onComplete) => (dispatch, getState) => {
+
+  const { accessToken } = getState().Login;
 
   dispatch({
     type: SAVE_BEFORE
@@ -11,16 +13,23 @@ export default (model, onComplete) => (dispatch) => {
   let promise;
 
   if (model.id) {
-    promise = request.put(parameters.apiHost + `/v1/notes/${model.id}`, model);
+    promise = request.put(parameters.apiHost + `/v1/notes/${model.id}`, model, {
+      headers: {
+        Authorization: accessToken
+      }
+    });
   } else {
-    promise = request.post(parameters.apiHost + '/v1/notes', model);
+    promise = request.post(parameters.apiHost + '/v1/notes', model, {
+      headers: {
+        Authorization: accessToken
+      }
+    });
   }
 
   promise
     .then(({ data }) => {
 
       if (onComplete) onComplete()
-
 
       dispatch({
         type: SAVE_SUCCESS,

@@ -1,9 +1,11 @@
 import React from 'react';
+import Cookie from 'js-cookie';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from "reselect";
 import Fetch from "../actions/Fetch";
 import Card from "./Card";
 import { TOGGLE_ADD_FORM } from '../actions';
+import { LOGOUT } from '../../Login/actions';
 
 class Notes extends React.Component {
 
@@ -15,6 +17,14 @@ class Notes extends React.Component {
     this.props.dispatch({
       type: TOGGLE_ADD_FORM,
       payload: true
+    });
+  };
+
+  logout = () => {
+
+    Cookie.remove('accessToken')
+    this.props.dispatch({
+      type: LOGOUT,
     });
   };
 
@@ -51,6 +61,7 @@ class Notes extends React.Component {
   };
 
   render() {
+    const { serverError } = this.props.Notes;
 
     return <div className="container">
       <div className="row">
@@ -62,13 +73,20 @@ class Notes extends React.Component {
                   <h3 className="m-0">SanityDesk Notes</h3>
                 </div>
                 <div className="col-6 text-right">
-                  <button className="btn btn-sm btn-success" onClick={this.toggleAdd}>
+                  <button className="btn btn-sm btn-success mr-1" onClick={this.toggleAdd}>
                     <i className="fa fa-plus"/> Add
+                  </button>
+                  <button className="btn btn-sm btn-secondary" onClick={this.logout}>
+                    <i className="fa fa-sign-out-alt"/> Logout
                   </button>
                 </div>
               </div>
             </div>
-            <div className="card-body px-0">
+            <div className="card-body">
+
+              {serverError
+                ? <div className="alert alert-danger">{serverError}</div>
+                : null}
 
               {this.renderContent()}
             </div>

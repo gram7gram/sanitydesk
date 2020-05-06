@@ -1,10 +1,15 @@
 import { combineReducers } from 'redux';
+import keyBy from 'lodash/keyBy';
 import * as Action from '../actions';
 import model from './model';
 
 const items = (prev = [], action) => {
+
+  let state;
   switch (action.type) {
+
     case Action.CHANGED:
+
       return prev.map(item => {
         if (item.id === action.payload.id) {
           return {
@@ -16,14 +21,16 @@ const items = (prev = [], action) => {
       });
 
     case Action.SAVE_SUCCESS:
-      const state = [...prev]
+      state = [ ...prev ];
 
-      state.push(action.payload)
+      state.push(action.payload);
 
-      return state
+      return Object.values(keyBy(state, 'id'));
 
     case Action.REMOVE_SUCCESS:
-      return prev.filter(item => item.id !== action.payload.id);
+      state = prev.filter(item => item.id !== action.payload.id);
+
+      return Object.values(keyBy(state, 'id'));
 
     case Action.FETCH_SUCCESS:
       return action.payload.items;
@@ -62,11 +69,28 @@ const isSaving = (prev = false, action) => {
 const isAddVisible = (prev = false, action) => {
   switch (action.type) {
     case Action.SAVE_SUCCESS:
-      return false
+      return false;
     case Action.TOGGLE_ADD_FORM:
       return !!action.payload;
     default:
       return prev;
+  }
+};
+
+const serverError = (prev = null, action) => {
+  switch (action.type) {
+    case Action.SAVE_FAILURE:
+    case Action.REMOVE_FAILURE:
+    case Action.FETCH_FAILURE:
+      if (action.payload)
+        if (action.payload.data)
+          if (action.payload.data.detail)
+            return action.payload.data.detail;
+
+      return null;
+
+    default:
+      return null;
   }
 };
 
@@ -76,5 +100,6 @@ export default combineReducers({
   isAddVisible,
   isSaving,
   model,
+  serverError,
 });
 

@@ -3,53 +3,58 @@
 namespace App\Service;
 
 use App\Entity\Note;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class NoteService
 {
 
-    /** @var ContainerInterface */
-    private $container;
+    /** @var EntityManagerInterface */
+    private $em;
+    /** @var Security */
+    private $security;
+    /** @var SerializerInterface */
+    private $serializer;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em, Security $security, SerializerInterface $serializer)
     {
-        $this->container = $container;
+        $this->em = $em;
+        $this->security = $security;
+        $this->serializer = $serializer;
     }
 
     public function create(array $content): Note
     {
+        $user = $this->security->getUser();
+
         $entity = new Note();
+        $entity->setCreatedBy($user);
 
         return $this->update($entity, $content);
     }
 
     public function update(Note $entity, $content): Note
     {
-
-        $em = $this->container->get('doctrine')->getManager();
-
         $entity->setUpdatedAt(new \DateTime());
         $entity->setText($content['text'] ?? '');
         $entity->setTitle($content['title'] ?? '');
 
-        $em->persist($entity);
-        $em->flush();
+        $this->em->persist($entity);
+        $this->em->flush();
 
         return $entity;
     }
 
     public function remove(Note $entity): void
     {
-        $em = $this->container->get('doctrine')->getManager();
-
-        $em->remove($entity);
-        $em->flush();
-
+        $this->em->remove($entity);
+        $this->em->flush();
     }
 
     public function serialize($entities): array
     {
-        return json_decode($this->container->get('serializer')
+        return json_decode($this->serializer
             ->serialize($entities, 'json', ['api_v1']), true);
     }
 
