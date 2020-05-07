@@ -2,7 +2,7 @@
 .idea
 docker-compose.yml
 
-api/env/Dockerfile
+api/Dockerfile
 api/.env
 api/var/
 api/vendor/
@@ -12,4 +12,4 @@ api/symfony.lock
 
 www/node_modules
 www/package-lock.json
-www/env/Dockerfile
+www/Dockerfile

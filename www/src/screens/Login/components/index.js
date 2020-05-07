@@ -56,7 +56,7 @@ const Login = () => {
                         onClick={check}
                         disabled={!isValid || loading}>
                   <i className={"fa " + (loading ? "fa-spin fa-circle-notch" : "fa-key")}/>
-                  &nbsp;{loading ? "Checking..." : "login"}
+                  &nbsp;{loading ? "Checking..." : "Login"}
                 </button>
               </div>
             </div>

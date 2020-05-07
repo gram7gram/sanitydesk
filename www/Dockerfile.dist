@@ -2,6 +2,8 @@ FROM keymetrics/pm2:10-alpine
 
 WORKDIR /var/www
 
+COPY . /var/www
+
 ENV NODE_ENV=production
 
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
