@@ -5,6 +5,8 @@ services:
   www:
     image: gram7gram/sanitydesk-todo-www:1
     build: ./www
+    environment:
+      - VIRTUAL_HOST=sanitydesk-www.thebaronmunchausen.com
     networks:
       - backend
 #    ports:
@@ -15,6 +17,8 @@ services:
   api:
     image: gram7gram/sanitydesk-todo-api:1
     build: ./api
+    environment:
+      - VIRTUAL_HOST=sanitydesk-api.thebaronmunchausen.com
     networks:
       - backend
 #    ports:
@@ -22,7 +26,7 @@ services:
 #    volumes:
 #      - './api:/var/www'
 
-  db:
+  mysql:
     image: mysql:5.6
     environment:
       - MYSQL_DATABASE=sanitydesk
