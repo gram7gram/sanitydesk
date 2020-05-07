@@ -14,7 +14,7 @@ Independant microservices represented by directories `www` (website) and `api`.
 
 Both microservices are build locally, packaged into docker containers and pushed to public docker registry.
 
-Microservices are hosted on VPS and availbale by links:
+Microservices are hosted on VPS and available by links:
 
 https://sanitydesk-www.thebaronmunchausen.com/
 
